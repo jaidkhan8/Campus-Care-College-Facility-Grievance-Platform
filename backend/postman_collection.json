@@ -1,0 +1,184 @@
+{
+  "info": {
+    "_postman_id": "smart-campus-complaint-api-2026",
+    "name": "Smart Campus Complaint Management System API",
+    "description": "Comprehensive Postman collection for testing Student, Admin, and Technician REST APIs with JWT auth.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "studentToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "adminToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "techToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Authentication",
+      "item": [
+        {
+          "name": "Register Student",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Emily Watson\",\n  \"email\": \"emily.student@campus.edu\",\n  \"password\": \"password123\",\n  \"role\": \"STUDENT\",\n  \"department\": \"Computer Science\",\n  \"phone\": \"+1 555-0301\"\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/auth/register", "host": ["{{baseUrl}}"], "path": ["auth", "register"]}
+          }
+        },
+        {
+          "name": "Login Admin",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@campus.edu\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"]}
+          }
+        },
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{studentToken}}"}],
+            "url": {"raw": "{{baseUrl}}/auth/me", "host": ["{{baseUrl}}"], "path": ["auth", "me"]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Student Complaints",
+      "item": [
+        {
+          "name": "List My Complaints",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{studentToken}}"}],
+            "url": {"raw": "{{baseUrl}}/complaints", "host": ["{{baseUrl}}"], "path": ["complaints"]}
+          }
+        },
+        {
+          "name": "Create Complaint",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{studentToken}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Broken ceiling fan regulator\",\n  \"description\": \"The speed control dial on the fan in Room 102 is jammed on maximum speed.\",\n  \"category_id\": 1,\n  \"priority\": \"MEDIUM\",\n  \"location\": \"Engineering Block 1, Room 102\"\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/complaints", "host": ["{{baseUrl}}"], "path": ["complaints"]}
+          }
+        },
+        {
+          "name": "Get Complaint Details & History",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{studentToken}}"}],
+            "url": {"raw": "{{baseUrl}}/complaints/1", "host": ["{{baseUrl}}"], "path": ["complaints", "1"]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Admin Operations",
+      "item": [
+        {
+          "name": "Get Dashboard Statistics",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{adminToken}}"}],
+            "url": {"raw": "{{baseUrl}}/admin/stats", "host": ["{{baseUrl}}"], "path": ["admin", "stats"]}
+          }
+        },
+        {
+          "name": "List All Campus Complaints",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{adminToken}}"}],
+            "url": {"raw": "{{baseUrl}}/admin/complaints?status=PENDING", "host": ["{{baseUrl}}"], "path": ["admin", "complaints"], "query": [{"key": "status", "value": "PENDING"}]}
+          }
+        },
+        {
+          "name": "Assign Complaint to Technician",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{adminToken}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"technician_id\": 3,\n  \"notes\": \"Please inspect this before 3 PM today.\"\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/admin/complaints/1/assign", "host": ["{{baseUrl}}"], "path": ["admin", "complaints", "1", "assign"]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Technician Operations",
+      "item": [
+        {
+          "name": "Get Assigned Complaints",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{techToken}}"}],
+            "url": {"raw": "{{baseUrl}}/technician/complaints", "host": ["{{baseUrl}}"], "path": ["technician", "complaints"]}
+          }
+        },
+        {
+          "name": "Update Status to IN_PROGRESS",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{techToken}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"IN_PROGRESS\",\n  \"remarks\": \"Inspected the room; replacing burnt relay switch.\"\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/technician/complaints/1/status", "host": ["{{baseUrl}}"], "path": ["technician", "complaints", "1", "status"]}
+          }
+        },
+        {
+          "name": "Resolve Complaint",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{techToken}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"new_status\": \"RESOLVED\",\n  \"remarks\": \"Replaced power socket module and tested with digital voltmeter. Fully working.\"\n}"
+            },
+            "url": {"raw": "{{baseUrl}}/technician/complaints/1/resolution", "host": ["{{baseUrl}}"], "path": ["technician", "complaints", "1", "resolution"]}
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Smart Campus Complaint Management System",
+  "description": "Full-stack role-based campus complaint management system with FastAPI/MySQL backend architecture, student ticketing, admin triage, and technician resolution workflows.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
